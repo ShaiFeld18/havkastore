@@ -1,8 +1,4 @@
 import datetime
-import numpy as np
-import pandas as pd
-
-import utils
 
 
 class Box:
@@ -33,27 +29,4 @@ class AllBoxes:
         print("No empty box")
 
 
-def box_menu(boxes):
-    response = 0
-    while response != 5:
-        print("""Option:
-        1 - Add box
-        2 - Display box status
-        3 - Display history
-        4 - Check corona history
-        5 - Return to main menu""")
-        response = utils.int_input()
-        if response == 1:
-            boxes.add_box()
-        elif response == 2:
-            print("Enter box num:")
-            num = utils.int_input()
-            b = boxes.box_list[num-1]
-            print(f"""Num: {b.num},
-            Current Worker: {b.current_worker},
-            Current Customer: {b.current_customer}""")
-        elif response == 3:
-            print(boxes.history)
-        elif response == 4:
-            sick = input('Which worker is sick?')
-            print(boxes.history[boxes.history['worker'] == sick])
+

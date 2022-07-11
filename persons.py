@@ -1,26 +1,27 @@
-import pandas as pd
 import datetime
 
 
 class Person:
     def __init__(self):
         self.name = input("Whats your name? ")
-        self.temp = int(input("Whats your temperature? "))
-        m = input("Do you have a mask? y/n ")
-        if m == 'y':
-            self.mask = True
+        t = float(input("Whats your temperature? "))
+        if t > 47.5:
+            print('You cant enter')
+            return
         else:
-            self.mask = False
+            self.temperature = t
+        m = input("Do you have a mask? y/n ")
+        if m == 'n':
+            print('You cant enter')
+            return
+        else:
+            self.mask = True
         q = input("Do you need quarantine? y/n ")
         if q == 'y':
-            self.quarantine = True
+            print('You cant enter')
+            return
         else:
-            self.quarantine = False
-
-    def can_enter(self):
-        if self.temp <= 38 and self.mask and self.quarantine is False:
-            return True
-        return False
+            self.quarantine = True
 
 
 class Customer(Person):
@@ -30,7 +31,8 @@ class Customer(Person):
 class Worker(Person):
     def __init__(self):
         Person.__init__(self)
-        self.signs = pd.DataFrame(columns=['In', 'Out'])
+        self.ins = []
+        self.outs = []
         self.debt = 0
 
     def sign_in(self):
@@ -38,17 +40,28 @@ class Worker(Person):
         m = input("Do you have a mask? y/n ")
         q = input("Do you need quarantine? y/n ")
         if temp <= 38 and m == 'y' and q == 'n':
-            self.signs.loc[len(self.signs.index)] = [datetime.datetime.now(), None]
-            print('Signed In!')
+            self.ins.append(datetime.datetime.now())
+            print('Signed In')
         else:
             self.debt += 40
             print("You can't enter, you've been fined 40 shekel")
 
     def sign_out(self):
-        self.signs.iloc[len(self.signs.index)-1, 1] = datetime.datetime.now()
-        print("Signed out!")
+        self.outs.append(datetime.datetime.now())
+        print("Signed out")
+
+    def print_history(self):
+        print(f'In\t\t\tOut')
+        for i in range(len(self.ins)):
+            if len(self.outs) < i:
+                out = None
+            else:
+                out = self.outs[i]
+            print(f'{self.ins[i]}\t\t\t{out}')
 
     def print_info(self):
-        print(f"""Name:{self.name},
-Debt: {self.debt},
-Work History:\n {self.signs.to_string()}""")
+        print(f"""
+               Name:{self.name},
+               Debt: {self.debt}$,
+               Work History:""")
+        self.print_history()
